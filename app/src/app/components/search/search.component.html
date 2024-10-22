@@ -1,0 +1,57 @@
+<div class="dropdown-search position-relative d-flex w-100">
+  <form class="w-100" [formGroup]="searchForm">
+    <input
+      type="text"
+      class="form-control"
+      formControlName="search"
+      (focus)="focusInput()"
+      placeholder="Search"
+    />
+  </form>
+  <ul
+    class="dropdown-menu w-100 mt-5"
+    [ngClass]="{ show: isFocused }"
+    aria-labelledby="dropdownMenuButton"
+  >
+    <li class="dropdown-search__providers px-1 py-1">
+      @for (provider of providers; track provider) {
+        <button
+          class="dropdown-search__providers__btn btn btn-sm ms-1 me-1 mb-1"
+          [ngClass]="{
+            'btn-outline-primary': selectedProvider !== provider,
+            'btn-primary': selectedProvider === provider,
+          }"
+          (click)="onProviderClick(provider)"
+        >
+          {{ provider ? provider : ("All" | uppercase) }}
+        </button>
+      }
+    </li>
+
+    <div class="dropdown-search__search-result">
+      @for (result of this.filteredItems$ | async; track result) {
+        <li class="ms-2 me-2" (click)="onItemClick(result.symbol)">
+          <a
+            class="search-item d-flex justify-content-between align-items-center px-1 py-1"
+          >
+            <span class="search-item__label">{{ result?.symbol }}</span>
+            <div class="d-flex">
+              @for (tag of transformTags(result.mappings); track tag) {
+                <span class="badge me-1 p-1" [ngClass]="getClassByTag(tag)">{{
+                  tag | uppercase
+                }}</span>
+              }
+            </div>
+          </a>
+        </li>
+      }
+    </div>
+  </ul>
+
+  <button class="btn btn-success ml-5" (click)="onSubscribeButtonClick()">
+    Subscribe
+  </button>
+  <button class="btn btn-warning text-white ml-5" (click)="onResetClick()">
+    Reset
+  </button>
+</div>

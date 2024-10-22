@@ -1,0 +1,32 @@
+<app-loader></app-loader>
+<app-toaster></app-toaster>
+<div class="container">
+  <app-search
+    [providers]="(providersList$ | async) || []"
+    (onSubscribeClick)="onSubscribeClick($event)"
+  ></app-search>
+  <p class="paragraph">Market data</p>
+
+  <div class="section info-section">
+    <div class="info-item">
+      <p><strong>Symbol:</strong> {{ symbol }}</p>
+    </div>
+    <div class="info-item">
+      <p>
+        <strong>Price:</strong>
+        {{ price | currency: "USD" : "symbol" : "1.2-22" }}
+      </p>
+    </div>
+    <div class="info-item">
+      <p><strong>Time:</strong> {{ timestamp | date: "HH:mm" }}</p>
+    </div>
+  </div>
+
+  <p class="paragraph">Charting data</p>
+  <div class="section rounded-section">
+    <app-chart-line
+      [candleData]="(chartData$ | async) || []"
+      [wsData]="(newChart$ | async) || []"
+    ></app-chart-line>
+  </div>
+</div>
